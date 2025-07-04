@@ -24,7 +24,7 @@ const Header = () => {
   return (
     <header className="bg-primary text-white">
       {/* Top bar */}
-      <div className="bg-[#004c91] py-2">
+      <div className="bg-[hsl(270,20%,15%)] py-2">
         <div className="container mx-auto px-4 flex justify-between items-center text-sm">
           <LocationSelector />
           <div className="flex items-center space-x-4">
@@ -46,9 +46,15 @@ const Header = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <div className="walmart-gradient p-3 rounded-lg font-bold text-xl text-white shadow-lg">
-              <svg width="32" height="32" viewBox="0 0 100 100" className="fill-current">
-                <path d="M50 10L60 40H90L70 60L80 90L50 70L20 90L30 60L10 40H40L50 10Z"/>
+            <div className="bg-accent p-2 rounded-lg shadow-lg">
+              <svg 
+                width="120" 
+                height="32" 
+                viewBox="0 0 519.2 108" 
+                className="fill-current text-primary"
+              >
+                <path d="M57.5 28.6L65.4 0h10.7l7.9 28.6L92.3 0h11.5L88.6 42.8H76.8L69.9 19L63 42.8H51.2L36 0h11.5L55.8 28.6zM140.5 31.8c0 6.9-5.6 12.5-12.5 12.5s-12.5-5.6-12.5-12.5c0-1.2.2-2.4.5-3.5l-7.4-2.1c-.7 1.8-1.1 3.7-1.1 5.6 0 12.2 9.9 22.1 22.1 22.1S152.2 44 152.2 31.8c0-1.9-.2-3.8-.6-5.6l-7.6 2.1c.3 1.1.5 2.3.5 3.5zM177.5 0v8.8h-9.8V0h-10.7v42.8h10.7v-8.8h9.8v8.8h10.7V0h-10.7zM223.8 31.8c0 6.9-5.6 12.5-12.5 12.5s-12.5-5.6-12.5-12.5c0-1.2.2-2.4.5-3.5l-7.4-2.1c-.7 1.8-1.1 3.7-1.1 5.6 0 12.2 9.9 22.1 22.1 22.1s22.1-9.9 22.1-22.1c0-1.9-.2-3.8-.6-5.6l-7.6 2.1c.3 1.1.5 2.3.5 3.5z"/>
+                <path d="M519.2 42.8h-11.2l-7.4-28.7-7.4 28.7H482l-12.4-42.8h11.6l7.3 29.2 7.5-29.2h11.2l7.5 29.2 7.3-29.2h11.6L519.2 42.8zM431.5 54.3c-12.2 0-22.1 9.9-22.1 22.1s9.9 22.1 22.1 22.1 22.1-9.9 22.1-22.1-9.9-22.1-22.1-22.1zm0 33.5c-6.3 0-11.4-5.1-11.4-11.4s5.1-11.4 11.4-11.4 11.4 5.1 11.4 11.4-5.1 11.4-11.4 11.4z"/>
               </svg>
             </div>
           </Link>
@@ -111,7 +117,7 @@ const Header = () => {
       </div>
 
       {/* Navigation */}
-      <nav className="bg-[#004c91] py-2">
+      <nav className="bg-[hsl(270,20%,15%)] py-2">
         <div className="container mx-auto px-4">
           <div className={`${isMobileMenuOpen ? 'block' : 'hidden'} md:flex items-center space-y-2 md:space-y-0 md:space-x-8 text-sm`}>
             <Link to="/products" className="block hover:text-accent transition-colors py-2 md:py-0">
