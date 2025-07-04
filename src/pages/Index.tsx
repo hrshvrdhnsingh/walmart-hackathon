@@ -21,26 +21,27 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <Header />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-[#0071ce] to-[#004c91] text-white py-16">
-        <div className="container mx-auto px-4 text-center">
+      <section className="walmart-gradient text-white py-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="container mx-auto px-4 text-center relative z-10">
           <h1 className="text-4xl md:text-6xl font-bold mb-4">
             Save Money. Live Better.
           </h1>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
+          <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
             Shop everything you need, from groceries to electronics, all in one place with unbeatable prices.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/products">
-              <Button size="lg" className="bg-[#ffc220] hover:bg-[#e6a91a] text-[#0071ce] font-semibold px-8">
+              <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-8">
                 Shop Now
               </Button>
             </Link>
             <Link to="/search">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-[#0071ce] px-8">
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary px-8">
                 Search Products
               </Button>
             </Link>
@@ -49,16 +50,16 @@ const Index = () => {
       </section>
 
       {/* Features */}
-      <section className="py-12 bg-white">
+      <section className="py-12 bg-card">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {features.map((feature, index) => (
               <div key={index} className="text-center">
-                <div className="inline-flex items-center justify-center w-12 h-12 bg-[#0071ce] text-white rounded-full mb-4">
+                <div className="inline-flex items-center justify-center w-12 h-12 bg-primary text-primary-foreground rounded-full mb-4">
                   <feature.icon className="h-6 w-6" />
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-1">{feature.title}</h3>
-                <p className="text-gray-600 text-sm">{feature.subtitle}</p>
+                <h3 className="font-semibold text-foreground mb-1">{feature.title}</h3>
+                <p className="text-muted-foreground text-sm">{feature.subtitle}</p>
               </div>
             ))}
           </div>
@@ -66,15 +67,15 @@ const Index = () => {
       </section>
 
       {/* Categories */}
-      <section className="py-16">
+      <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
+          <h2 className="text-3xl font-bold text-center mb-12 text-foreground">
             Shop by Category
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {categories.map((category, index) => (
               <Link key={index} to="/products">
-                <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
+                <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer bg-card border-border">
                   <div className="aspect-square overflow-hidden">
                     <img 
                       src={category.image} 
@@ -83,7 +84,7 @@ const Index = () => {
                     />
                   </div>
                   <div className="p-4">
-                    <h3 className="font-semibold text-lg text-center text-gray-900">
+                    <h3 className="font-semibold text-lg text-center text-foreground">
                       {category.name}
                     </h3>
                   </div>
@@ -95,16 +96,17 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-[#ffc220] py-16">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-[#0071ce] mb-4">
+      <section className="walmart-gradient py-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <h2 className="text-3xl font-bold text-white mb-4">
             Ready to start shopping?
           </h2>
-          <p className="text-[#0071ce] text-lg mb-8">
+          <p className="text-white/90 text-lg mb-8">
             Discover thousands of products at unbeatable prices
           </p>
           <Link to="/products">
-            <Button size="lg" className="bg-[#0071ce] hover:bg-[#005bb5] text-white px-8">
+            <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground px-8">
               Browse All Products
             </Button>
           </Link>
@@ -148,7 +150,7 @@ const Index = () => {
               </div>
             </div>
           </div>
-          <div className="border-t border-[#0071ce] mt-8 pt-8 text-center text-sm">
+          <div className="border-t border-primary mt-8 pt-8 text-center text-sm">
             <p>&copy; 2024 Walmart. All rights reserved.</p>
           </div>
         </div>

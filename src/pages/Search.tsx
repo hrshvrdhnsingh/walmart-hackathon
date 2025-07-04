@@ -81,12 +81,12 @@ const Search = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <Header />
       
       <div className="container mx-auto px-4 py-8">
         {/* Search Section */}
-        <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
+        <div className="bg-card p-6 rounded-lg shadow-sm mb-8 border-border">
           <form onSubmit={handleSearch} className="flex gap-4 mb-4">
             <div className="flex-1">
               <Input
@@ -94,21 +94,21 @@ const Search = () => {
                 placeholder="Search for products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full"
+                className="w-full bg-input border-border text-foreground"
               />
             </div>
-            <Button type="submit" className="bg-[#0071ce] hover:bg-[#005bb5]">
+            <Button type="submit" className="bg-primary hover:bg-primary/90">
               <SearchIcon className="h-4 w-4 mr-2" />
               Search
             </Button>
-            <Button type="button" variant="outline">
+            <Button type="button" variant="outline" className="border-border text-foreground hover:bg-accent">
               <Filter className="h-4 w-4 mr-2" />
               Filters
             </Button>
           </form>
           
           {searchQuery && (
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-muted-foreground">
               Showing results for "{searchQuery}" ({results.length} items)
             </div>
           )}
@@ -117,8 +117,8 @@ const Search = () => {
         {/* Results */}
         {isLoading ? (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0071ce] mx-auto"></div>
-            <p className="mt-4 text-gray-600">Searching...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Searching...</p>
           </div>
         ) : (
           <>
@@ -130,11 +130,11 @@ const Search = () => {
               </div>
             ) : (
               <div className="text-center py-12">
-                <SearchIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-600 mb-2">
+                <SearchIcon className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-foreground mb-2">
                   No results found
                 </h3>
-                <p className="text-gray-500">
+                <p className="text-muted-foreground">
                   Try searching with different keywords
                 </p>
               </div>

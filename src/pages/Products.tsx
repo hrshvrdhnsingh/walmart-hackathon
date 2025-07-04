@@ -121,44 +121,44 @@ const Products = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <Header />
       
       <div className="container mx-auto px-4 py-8">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-foreground mb-2">
             Top Products
           </h1>
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             Discover our most popular and highly-rated products
           </p>
         </div>
 
         {/* Filters and Sort */}
-        <div className="bg-white p-4 rounded-lg shadow-sm mb-8">
+        <div className="bg-card p-4 rounded-lg shadow-sm mb-8 border-border">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div className="flex items-center gap-4">
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="border-border text-foreground hover:bg-accent">
                 <Filter className="h-4 w-4 mr-2" />
                 Filters
               </Button>
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="border-border text-foreground hover:bg-accent">
                   <Grid className="h-4 w-4" />
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="border-border text-foreground hover:bg-accent">
                   <List className="h-4 w-4" />
                 </Button>
               </div>
             </div>
             
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">Sort by:</span>
+              <span className="text-sm text-muted-foreground">Sort by:</span>
               <select 
                 value={sortBy}
                 onChange={(e) => handleSortChange(e.target.value)}
-                className="border border-gray-300 rounded px-3 py-1 text-sm"
+                className="border border-border rounded px-3 py-1 text-sm bg-input text-foreground"
               >
                 <option value="featured">Featured</option>
                 <option value="price-low">Price: Low to High</option>
@@ -172,8 +172,8 @@ const Products = () => {
         {/* Products Grid */}
         {isLoading ? (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0071ce] mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading products...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Loading products...</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
@@ -186,7 +186,7 @@ const Products = () => {
         {/* Load More */}
         {!isLoading && (
           <div className="text-center mt-12">
-            <Button size="lg" variant="outline" className="px-8">
+            <Button size="lg" variant="outline" className="px-8 border-border text-foreground hover:bg-accent">
               Load More Products
             </Button>
           </div>

@@ -24,12 +24,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
     : 0;
 
   return (
-    <Card className="p-4 hover:shadow-lg transition-shadow bg-white">
+    <Card className="p-4 hover:shadow-lg transition-shadow bg-card border-border">
       {product.isSponsored && (
-        <div className="text-xs text-gray-500 mb-2">Sponsored</div>
+        <div className="text-xs text-muted-foreground mb-2">Sponsored</div>
       )}
       
-      <div className="aspect-square mb-3 overflow-hidden rounded-lg bg-gray-100">
+      <div className="aspect-square mb-3 overflow-hidden rounded-lg bg-muted">
         <img 
           src={product.image} 
           alt={product.name}
@@ -38,7 +38,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       </div>
 
       <div className="space-y-2">
-        <h3 className="text-sm font-medium line-clamp-2 text-gray-900">
+        <h3 className="text-sm font-medium line-clamp-2 text-foreground">
           {product.name}
         </h3>
 
@@ -49,32 +49,32 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 key={i}
                 className={`h-3 w-3 ${
                   i < Math.floor(product.rating)
-                    ? "text-[#ffc220] fill-current"
-                    : "text-gray-300"
+                    ? "text-accent fill-current"
+                    : "text-muted-foreground"
                 }`}
               />
             ))}
           </div>
-          <span className="text-xs text-gray-600">({product.reviews})</span>
+          <span className="text-xs text-muted-foreground">({product.reviews})</span>
         </div>
 
         <div className="flex items-center space-x-2">
-          <span className="text-lg font-semibold text-gray-900">
+          <span className="text-lg font-semibold text-foreground">
             ${product.price.toFixed(2)}
           </span>
           {product.originalPrice && (
             <>
-              <span className="text-sm text-gray-500 line-through">
+              <span className="text-sm text-muted-foreground line-through">
                 ${product.originalPrice.toFixed(2)}
               </span>
-              <span className="text-xs bg-[#e6f3ff] text-[#0071ce] px-2 py-1 rounded">
+              <span className="text-xs bg-accent/20 text-accent px-2 py-1 rounded">
                 {discount}% off
               </span>
             </>
           )}
         </div>
 
-        <Button className="w-full bg-[#0071ce] hover:bg-[#005bb5] text-white">
+        <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
           Add to cart
         </Button>
       </div>
