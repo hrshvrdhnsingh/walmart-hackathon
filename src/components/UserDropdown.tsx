@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { User, MapPin, Settings, LogOut, ChevronDown } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,6 +14,10 @@ import { useAuth } from "@/hooks/useAuth";
 
 const UserDropdown = () => {
   const { user, logout } = useAuth();
+
+  const handleSignOut = () => {
+    logout();
+  };
 
   if (!user) return null;
 
@@ -31,12 +36,14 @@ const UserDropdown = () => {
           <p className="text-sm text-muted-foreground">{user.email}</p>
         </div>
         
-        <DropdownMenuItem className="text-foreground hover:bg-accent">
-          <User className="h-4 w-4 mr-2" />
-          My Account
-        </DropdownMenuItem>
+        <Link to="/account">
+          <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">
+            <User className="h-4 w-4 mr-2" />
+            My Account
+          </DropdownMenuItem>
+        </Link>
         
-        <DropdownMenuItem className="text-foreground hover:bg-accent">
+        <DropdownMenuItem className="text-foreground hover:bg-accent cursor-pointer">
           <Settings className="h-4 w-4 mr-2" />
           Settings
         </DropdownMenuItem>
@@ -44,8 +51,8 @@ const UserDropdown = () => {
         <DropdownMenuSeparator className="bg-border" />
         
         <DropdownMenuItem 
-          onClick={logout}
-          className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+          onClick={handleSignOut}
+          className="text-destructive hover:bg-destructive/10 hover:text-destructive cursor-pointer"
         >
           <LogOut className="h-4 w-4 mr-2" />
           Sign Out

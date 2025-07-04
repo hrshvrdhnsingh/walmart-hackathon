@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { useCart } from "@/contexts/CartContext";
 import UserDropdown from "./UserDropdown";
 import LocationSelector from "./LocationSelector";
 
@@ -13,6 +14,7 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  const { totalItems } = useCart();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,23 +48,12 @@ const Header = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <div className="bg-accent p-3 rounded-lg shadow-lg">
-              <svg 
-                width="120" 
-                height="40" 
-                viewBox="0 0 519.187 108.922" 
-                className="fill-current text-primary"
-              >
-                <path d="M55.8 28.6L63.7 0h10.7l7.9 28.6L90.6 0h11.5L86.9 42.8H75.1L68.2 19L61.3 42.8H49.5L34.3 0h11.5L55.8 28.6z"/>
-                <path d="M138.8 31.8c0 6.9-5.6 12.5-12.5 12.5s-12.5-5.6-12.5-12.5c0-1.2.2-2.4.5-3.5l-7.4-2.1c-.7 1.8-1.1 3.7-1.1 5.6 0 12.2 9.9 22.1 22.1 22.1s22.1-9.9 22.1-22.1c0-1.9-.2-3.8-.6-5.6l-7.6 2.1c.3 1.1.5 2.3.5 3.5z"/>
-                <path d="M175.8 0v8.8h-9.8V0h-10.7v42.8h10.7v-8.8h9.8v8.8h10.7V0h-10.7z"/>
-                <path d="M222.1 31.8c0 6.9-5.6 12.5-12.5 12.5s-12.5-5.6-12.5-12.5c0-1.2.2-2.4.5-3.5l-7.4-2.1c-.7 1.8-1.1 3.7-1.1 5.6 0 12.2 9.9 22.1 22.1 22.1s22.1-9.9 22.1-22.1c0-1.9-.2-3.8-.6-5.6l-7.6 2.1c.3 1.1.5 2.3.5 3.5z"/>
-                <path d="M519.2 42.8h-11.2l-7.4-28.7-7.4 28.7H482l-12.4-42.8h11.6l7.3 29.2 7.5-29.2h11.2l7.5 29.2 7.3-29.2h11.6L519.2 42.8z"/>
-                <path d="M273.4 0h-10.7v42.8h10.7V0z"/>
-                <path d="M305.7 31.8c0 6.9-5.6 12.5-12.5 12.5s-12.5-5.6-12.5-12.5c0-1.2.2-2.4.5-3.5l-7.4-2.1c-.7 1.8-1.1 3.7-1.1 5.6 0 12.2 9.9 22.1 22.1 22.1s22.1-9.9 22.1-22.1c0-1.9-.2-3.8-.6-5.6l-7.6 2.1c.3 1.1.5 2.3.5 3.5z"/>
-                <path d="M372.4 42.8h-10.7L354.4 19l-7.3 23.8h-10.7L322 0h11.6l7.3 29.2L348.4 0h11.2l7.5 29.2L374.4 0H386L372.4 42.8z"/>
-                <path d="M431.5 54.3c-12.2 0-22.1 9.9-22.1 22.1s9.9 22.1 22.1 22.1 22.1-9.9 22.1-22.1-9.9-22.1-22.1-22.1zm0 33.5c-6.3 0-11.4-5.1-11.4-11.4s5.1-11.4 11.4-11.4 11.4 5.1 11.4 11.4-5.1 11.4-11.4 11.4z"/>
-              </svg>
+            <div className="bg-accent p-2 rounded-lg shadow-lg flex items-center justify-center">
+              <img 
+                src="https://i5.walmartimages.com/dfw/63fd9f59-14e2/9d304ce6-96de-4331-b8ec-c5191226d378/v1/spark-icon.svg"
+                alt="Walmart"
+                className="h-8 w-8"
+              />
             </div>
           </Link>
 
@@ -88,9 +79,16 @@ const Header = () => {
 
           {/* Right side icons */}
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="icon" className="text-white hover:bg-primary/20">
-              <ShoppingCart className="h-6 w-6" />
-            </Button>
+            <Link to="/cart">
+              <Button variant="ghost" size="icon" className="text-white hover:bg-primary/20 relative">
+                <ShoppingCart className="h-6 w-6" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
+                    {totalItems > 99 ? '99+' : totalItems}
+                  </span>
+                )}
+              </Button>
+            </Link>
             <Button 
               variant="ghost" 
               size="icon" 
@@ -141,6 +139,9 @@ const Header = () => {
             </Link>
             <Link to="/products" className="block hover:text-accent transition-colors py-2 md:py-0">
               Home
+            </Link>
+            <Link to="/contact" className="block hover:text-accent transition-colors py-2 md:py-0">
+              Contact Us
             </Link>
           </div>
         </div>
