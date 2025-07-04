@@ -68,3 +68,29 @@ All colors MUST be HSL.
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* Spotlight effect */
+.spotlight-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.spotlight-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(255, 194, 32, 0.06),
+    transparent 40%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.spotlight-container:hover .spotlight-effect {
+  opacity: 1;
+}

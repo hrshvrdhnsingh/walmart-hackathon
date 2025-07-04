@@ -4,8 +4,11 @@ import { Card } from "@/components/ui/card";
 import Header from "@/components/Header";
 import { Link } from "react-router-dom";
 import { Truck, RefreshCw, DollarSign, Clock } from "lucide-react";
+import { useState, useEffect } from "react";
 
 const Index = () => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
   const categories = [
     { name: "Grocery", image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=300&h=200&fit=crop", color: "bg-green-100" },
     { name: "Electronics", image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=300&h=200&fit=crop", color: "bg-blue-100" },
@@ -20,13 +23,30 @@ const Index = () => {
     { icon: Clock, title: "Pickup today", subtitle: "At your local store" },
   ];
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
       
       {/* Hero Section */}
-      <section className="walmart-gradient text-white py-16 relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/20"></div>
+      <section 
+        className="bg-primary text-white py-16 relative overflow-hidden spotlight-container"
+        onMouseMove={handleMouseMove}
+      >
+        <div 
+          className="spotlight-effect" 
+          style={{
+            '--mouse-x': `${mousePosition.x}px`,
+            '--mouse-y': `${mousePosition.y}px`
+          } as React.CSSProperties}
+        ></div>
         <div className="container mx-auto px-4 text-center relative z-10">
           <h1 className="text-4xl md:text-6xl font-bold mb-4">
             Save Money. Live Better.
@@ -96,8 +116,7 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="walmart-gradient py-16 relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/20"></div>
+      <section className="bg-primary py-16 relative overflow-hidden">
         <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-3xl font-bold text-white mb-4">
             Ready to start shopping?
@@ -114,7 +133,7 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#004c91] text-white py-12">
+      <footer className="bg-[hsl(270,20%,10%)] text-white py-12">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
@@ -136,7 +155,7 @@ const Index = () => {
             <div>
               <h3 className="font-semibold mb-4">Account</h3>
               <div className="space-y-2 text-sm">
-                <div>Sign In</div>
+                <Link to="/account" className="block hover:text-accent">My Account</Link>
                 <div>Create Account</div>
                 <div>Order Status</div>
               </div>
@@ -150,7 +169,7 @@ const Index = () => {
               </div>
             </div>
           </div>
-          <div className="border-t border-primary mt-8 pt-8 text-center text-sm">
+          <div className="border-t border-[hsl(270,10%,20%)] mt-8 pt-8 text-center text-sm">
             <p>&copy; 2024 Walmart. All rights reserved.</p>
           </div>
         </div>

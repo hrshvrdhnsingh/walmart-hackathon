@@ -24,12 +24,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
     : 0;
 
   return (
-    <Card className="p-4 hover:shadow-lg transition-shadow bg-card border-border">
+    <Card className="p-4 hover:shadow-lg transition-shadow bg-card border-border h-full flex flex-col">
       {product.isSponsored && (
-        <div className="text-xs text-muted-foreground mb-2">Sponsored</div>
+        <div className="text-xs text-muted-foreground mb-2 h-4">Sponsored</div>
+      )}
+      {!product.isSponsored && (
+        <div className="h-4 mb-2"></div>
       )}
       
-      <div className="aspect-square mb-3 overflow-hidden rounded-lg bg-muted">
+      <div className="aspect-square mb-3 overflow-hidden rounded-lg bg-muted flex-shrink-0">
         <img 
           src={product.image} 
           alt={product.name}
@@ -37,12 +40,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
         />
       </div>
 
-      <div className="space-y-2">
-        <h3 className="text-sm font-medium line-clamp-2 text-foreground">
+      <div className="space-y-3 flex-1 flex flex-col">
+        <h3 className="text-sm font-medium line-clamp-2 text-foreground min-h-[2.5rem] flex-shrink-0">
           {product.name}
         </h3>
 
-        <div className="flex items-center space-x-1">
+        <div className="flex items-center space-x-1 flex-shrink-0">
           <div className="flex items-center">
             {[...Array(5)].map((_, i) => (
               <Star
@@ -58,7 +61,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <span className="text-xs text-muted-foreground">({product.reviews})</span>
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 flex-shrink-0">
           <span className="text-lg font-semibold text-foreground">
             ${product.price.toFixed(2)}
           </span>
@@ -74,9 +77,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
           )}
         </div>
 
-        <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
-          Add to cart
-        </Button>
+        <div className="mt-auto pt-2">
+          <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+            Add to cart
+          </Button>
+        </div>
       </div>
     </Card>
   );
