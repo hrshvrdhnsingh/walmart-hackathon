@@ -24,7 +24,7 @@ const UserDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="text-white hover:bg-primary/20 flex items-center gap-2">
+        <Button variant="ghost" className="text-white hover:text-accent hover:bg-[hsl(270,20%,15%) flex items-center gap-2">
           <User className="h-5 w-5" />
           <span className="hidden md:inline">Account</span>
           <ChevronDown className="h-4 w-4" />

@@ -34,7 +34,7 @@ const Header = () => {
               <UserDropdown />
             ) : (
               <Link to="/signin">
-                <Button variant="ghost" className="text-white hover:bg-primary/20 text-sm">
+                <Button variant="ghost" className="text-white hover:text-accent hover:bg-[hsl(270,20%,15%) text-sm">
                   Sign In
                 </Button>
               </Link>
@@ -48,7 +48,7 @@ const Header = () => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <div className="bg-accent p-2 rounded-lg shadow-lg flex items-center justify-center">
+            <div className="p-2 rounded-lg flex items-center justify-center">
               <img 
                 src="https://i5.walmartimages.com/dfw/63fd9f59-14e2/9d304ce6-96de-4331-b8ec-c5191226d378/v1/spark-icon.svg"
                 alt="Walmart"
@@ -80,7 +80,7 @@ const Header = () => {
           {/* Right side icons */}
           <div className="flex items-center space-x-4">
             <Link to="/cart">
-              <Button variant="ghost" size="icon" className="text-white hover:bg-primary/20 relative">
+              <Button variant="ghost" size="icon" className="text-white hover:text-accent hover:bg-[hsl(270,20%,15%) relative">
                 <ShoppingCart className="h-6 w-6" />
                 {totalItems > 0 && (
                   <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
