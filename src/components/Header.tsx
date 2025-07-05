@@ -12,7 +12,6 @@ import { toast } from "sonner";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const { user } = useAuth();
   const { totalItems } = useCart();
   const navigate = useNavigate();
@@ -28,28 +27,9 @@ const Header = () => {
     navigate('/signin');
   };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMousePosition({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
-
   return (
-    <header 
-      className="bg-primary text-white shadow-lg dark-spotlight-container"
-      onMouseMove={handleMouseMove}
-    >
-      <div 
-        className="dark-spotlight-effect" 
-        style={{
-          '--mouse-x': `${mousePosition.x}px`,
-          '--mouse-y': `${mousePosition.y}px`
-        } as React.CSSProperties}
-      ></div>
-      
-      <div className="container mx-auto px-4 py-3 relative z-10">
+    <header className="bg-primary text-white shadow-lg">
+      <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
