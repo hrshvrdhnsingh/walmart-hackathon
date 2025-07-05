@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import Header from "@/components/Header";
 import { Link } from "react-router-dom";
 import { Truck, RefreshCw, DollarSign, Clock } from "lucide-react";
-import { useState } useEffect } from "react";
+import { useState, useEffect } from "react";
 import { categories } from "@/data/mockProducts";
 
 const Index = () => {
