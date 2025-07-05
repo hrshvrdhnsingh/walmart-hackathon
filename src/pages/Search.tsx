@@ -3,144 +3,231 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search as SearchIcon, Filter } from "lucide-react";
-
-// Mock data - replace with actual API call
-const mockSearchResults = [
-  {
-    id: "1",
-    name: "Samsung 65\" 4K Smart TV with HDR",
-    price: 499.99,
-    originalPrice: 699.99,
-    image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=300&h=300&fit=crop",
-    rating: 4.5,
-    reviews: 1250,
-    isSponsored: true,
-  },
-  {
-    id: "2",
-    name: "Apple AirPods Pro (2nd Generation)",
-    price: 199.99,
-    originalPrice: 249.99,
-    image: "https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?w=300&h=300&fit=crop",
-    rating: 4.8,
-    reviews: 892,
-  },
-  {
-    id: "3",
-    name: "Nike Air Max Running Shoes",
-    price: 89.99,
-    originalPrice: 120.00,
-    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop",
-    rating: 4.3,
-    reviews: 567,
-  },
-  {
-    id: "4",
-    name: "KitchenAid Stand Mixer",
-    price: 279.99,
-    image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300&h=300&fit=crop",
-    rating: 4.7,
-    reviews: 334,
-  },
-];
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import { Filter, Grid, List, X, Search as SearchIcon } from "lucide-react";
+import { mockProducts } from "@/data/mockProducts";
 
 const Search = () => {
   const [searchParams] = useSearchParams();
-  const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
-  const [results, setResults] = useState(mockSearchResults);
-  const [isLoading, setIsLoading] = useState(false);
+  const query = searchParams.get("q") || "";
+  const [products] = useState(mockProducts);
+  const [filteredProducts, setFilteredProducts] = useState(mockProducts);
+  const [sortBy, setSortBy] = useState("featured");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState({
+    priceRange: [0, 1200],
+    rating: "",
+    brand: "",
+  });
 
-  // Simulate API call
-  const performSearch = async (query: string) => {
-    setIsLoading(true);
-    // TODO: Replace with actual API call
-    setTimeout(() => {
-      setResults(mockSearchResults.filter(product => 
-        product.name.toLowerCase().includes(query.toLowerCase())
-      ));
-      setIsLoading(false);
-    }, 500);
-  };
-
+  // Filter products based on search query and filters
   useEffect(() => {
-    const query = searchParams.get("q");
-    if (query) {
-      setSearchQuery(query);
-      performSearch(query);
-    }
-  }, [searchParams]);
+    let filtered = [...products];
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      performSearch(searchQuery);
+    // Search query filter
+    if (query) {
+      filtered = filtered.filter(product =>
+        product.name.toLowerCase().includes(query.toLowerCase()) ||
+        product.category.toLowerCase().includes(query.toLowerCase())
+      );
     }
+
+    // Price range filter
+    filtered = filtered.filter(product => 
+      product.price >= filters.priceRange[0] && product.price <= filters.priceRange[1]
+    );
+
+    // Rating filter
+    if (filters.rating) {
+      const minRating = Number(filters.rating);
+      filtered = filtered.filter(product => product.rating >= minRating);
+    }
+
+    // Brand search filter
+    if (filters.brand) {
+      filtered = filtered.filter(product => 
+        product.name.toLowerCase().includes(filters.brand.toLowerCase())
+      );
+    }
+
+    setFilteredProducts(filtered);
+  }, [filters, products, query]);
+
+  // Sort products
+  useEffect(() => {
+    const sortedProducts = [...filteredProducts];
+    
+    switch (sortBy) {
+      case "price-low":
+        sortedProducts.sort((a, b) => a.price - b.price);
+        break;
+      case "price-high":
+        sortedProducts.sort((a, b) => b.price - a.price);
+        break;
+      case "rating":
+        sortedProducts.sort((a, b) => b.rating - a.rating);
+        break;
+      default:
+        break;
+    }
+    
+    setFilteredProducts(sortedProducts);
+  }, [sortBy]);
+
+  const clearFilters = () => {
+    setFilters({
+      priceRange: [0, 1200],
+      rating: "",
+      brand: "",
+    });
   };
+
+  const hasActiveFilters = filters.rating !== "" || filters.brand !== "" || 
+    filters.priceRange[0] !== 0 || filters.priceRange[1] !== 1200;
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
       
       <div className="container mx-auto px-4 py-8">
-        {/* Search Section */}
-        <div className="bg-card p-6 rounded-lg shadow-sm mb-8 border-border">
-          <form onSubmit={handleSearch} className="flex gap-4 mb-4">
-            <div className="flex-1">
-              <Input
-                type="text"
-                placeholder="Search for products..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-input border-border text-foreground"
-              />
-            </div>
-            <Button type="submit" className="bg-primary hover:bg-primary/90">
-              <SearchIcon className="h-4 w-4 mr-2" />
-              Search
-            </Button>
-            <Button type="button" variant="outline" className="border-border text-foreground hover:bg-accent">
-              <Filter className="h-4 w-4 mr-2" />
-              Filters
-            </Button>
-          </form>
-          
-          {searchQuery && (
-            <div className="text-sm text-muted-foreground">
-              Showing results for "{searchQuery}" ({results.length} items)
-            </div>
-          )}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            Search Results {query && `for "${query}"`}
+          </h1>
+          <p className="text-muted-foreground">
+            {filteredProducts.length} products found
+          </p>
         </div>
 
-        {/* Results */}
-        {isLoading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-            <p className="mt-4 text-muted-foreground">Searching...</p>
-          </div>
-        ) : (
-          <>
-            {results.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                {results.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Sidebar Filters */}
+          <div className={`lg:w-64 ${showFilters ? 'block' : 'hidden lg:block'}`}>
+            <Card className="bg-card border-border p-4 sticky top-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-foreground">Filters</h3>
+                {hasActiveFilters && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearFilters}
+                    className="text-accent hover:text-accent/80"
+                  >
+                    <X className="h-4 w-4 mr-1" />
+                    Clear
+                  </Button>
+                )}
               </div>
-            ) : (
+
+              <div className="space-y-6">
+                {/* Brand Search */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 block">Brand</label>
+                  <div className="relative">
+                    <Input
+                      type="text"
+                      placeholder="Search brands..."
+                      value={filters.brand}
+                      onChange={(e) => setFilters({ ...filters, brand: e.target.value })}
+                      className="w-full pl-8"
+                    />
+                    <SearchIcon className="h-4 w-4 absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  </div>
+                </div>
+
+                {/* Customer Rating */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 block">Customer Rating</label>
+                  <select
+                    value={filters.rating}
+                    onChange={(e) => setFilters({ ...filters, rating: e.target.value })}
+                    className="w-full border border-border rounded px-3 py-2 text-sm bg-input text-foreground"
+                  >
+                    <option value="">Any Rating</option>
+                    <option value="4">4 Stars & Up</option>
+                    <option value="4.5">4.5 Stars & Up</option>
+                  </select>
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          {/* Main Content */}
+          <div className="flex-1">
+            {/* Filters and Sort Bar */}
+            <Card className="bg-card p-4 rounded-lg shadow-sm mb-8 border-border">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div className="flex items-center gap-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowFilters(!showFilters)}
+                    className="border-border text-foreground hover:bg-accent lg:hidden"
+                  >
+                    <Filter className="h-4 w-4 mr-2" />
+                    Filters
+                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant={viewMode === "grid" ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setViewMode("grid")}
+                    >
+                      <Grid className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant={viewMode === "list" ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setViewMode("list")}
+                    >
+                      <List className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">Sort by:</span>
+                  <select 
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="border border-border rounded px-3 py-1 text-sm bg-input text-foreground"
+                  >
+                    <option value="featured">Featured</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="rating">Customer Rating</option>
+                  </select>
+                </div>
+              </div>
+            </Card>
+
+            {/* Products Grid/List */}
+            <div className={viewMode === "grid" 
+              ? "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" 
+              : "space-y-4"
+            }>
+              {filteredProducts.map((product) => (
+                <ProductCard key={product.id} product={{...product, category: product.category}} />
+              ))}
+            </div>
+
+            {filteredProducts.length === 0 && (
               <div className="text-center py-12">
-                <SearchIcon className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-foreground mb-2">
-                  No results found
+                  No products found
                 </h3>
-                <p className="text-muted-foreground">
-                  Try searching with different keywords
+                <p className="text-muted-foreground mb-4">
+                  Try adjusting your search or filters
                 </p>
+                <Button onClick={clearFilters} className="bg-primary hover:bg-primary/90">
+                  Clear Filters
+                </Button>
               </div>
             )}
-          </>
-        )}
+          </div>
+        </div>
       </div>
     </div>
   );

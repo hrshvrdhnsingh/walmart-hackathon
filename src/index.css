@@ -28,7 +28,7 @@ All colors MUST be HSL.
     --muted: 210 17% 95%;
     --muted-foreground: 215 13% 65%;
 
-    --accent: 47 100% 57%; /* Walmart Yellow #ffc220 */
+    --accent: 47 100% 48%; /* Walmart Yellow #ffc220 */
     --accent-foreground: 240 5.9% 10%;
 
     --destructive: 0 84.2% 60.2%;
@@ -154,7 +154,7 @@ All colors MUST be HSL.
   --success-text: hsl(0, 0%, 100%);
   --info-bg: hsl(211, 100%, 50%);
   --info-text: hsl(0, 0%, 100%);
-  --warning-bg: hsl(47, 100%, 57%);
+  --warning-bg: hsl(47, 100%, 48%);
   --warning-text: hsl(240, 5.9%, 10%);
   --error-bg: hsl(0, 84.2%, 60.2%);
   --error-text: hsl(0, 0%, 98%);

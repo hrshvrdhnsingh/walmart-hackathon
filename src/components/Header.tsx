@@ -36,8 +36,8 @@ const Header = () => {
 
   return (
     <header className="bg-primary text-white">
-      {/* Top bar */}
-      <div className="bg-primary/90 py-2">
+      {/* Top bar - different shade of blue */}
+      <div className="bg-[hsl(211,100%,45%)] py-2">
         <div className="container mx-auto px-4 flex justify-between items-center text-sm">
           <LocationSelector />
           <div className="flex items-center space-x-4">
@@ -81,7 +81,7 @@ const Header = () => {
               <Button
                 type="submit"
                 size="icon"
-                className="absolute right-1 top-1/2 -translate-y-1/2 bg-accent hover:bg-accent/90 text-accent-foreground rounded-full h-10 w-10"
+                className="absolute right-1 top-1/2 -translate-y-1/2 bg-[hsl(47,100%,48%)] hover:bg-[hsl(47,100%,42%)] text-accent-foreground rounded-full h-10 w-10"
               >
                 <Search className="h-5 w-5" />
               </Button>
@@ -134,7 +134,7 @@ const Header = () => {
             <Button
               type="submit"
               size="icon"
-              className="absolute right-1 top-1/2 -translate-y-1/2 bg-accent hover:bg-accent/90 text-accent-foreground rounded-full h-10 w-10"
+              className="absolute right-1 top-1/2 -translate-y-1/2 bg-[hsl(47,100%,48%)] hover:bg-[hsl(47,100%,42%)] text-accent-foreground rounded-full h-10 w-10"
             >
               <Search className="h-5 w-5" />
             </Button>
@@ -142,8 +142,8 @@ const Header = () => {
         </form>
       </div>
 
-      {/* Navigation */}
-      <nav className="bg-primary/90 py-2">
+      {/* Navigation - different shade of blue */}
+      <nav className="bg-[hsl(211,100%,45%)] py-2">
         <div className="container mx-auto px-4">
           <div className={`${isMobileMenuOpen ? 'block' : 'hidden'} md:flex items-center space-y-2 md:space-y-0 md:space-x-8 text-sm`}>
             {categories.map((category) => (

@@ -4,17 +4,22 @@ import { Card } from "@/components/ui/card";
 import Header from "@/components/Header";
 import { Link } from "react-router-dom";
 import { Truck, RefreshCw, DollarSign, Clock } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } useEffect } from "react";
+import { categories } from "@/data/mockProducts";
 
 const Index = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [footerMousePosition, setFooterMousePosition] = useState({ x: 0, y: 0 });
 
-  const categories = [
+  const categoryCards = [
     { name: "Grocery", image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=300&h=200&fit=crop", color: "bg-green-100" },
     { name: "Electronics", image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=300&h=200&fit=crop", color: "bg-blue-100" },
     { name: "Fashion", image: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=300&h=200&fit=crop", color: "bg-pink-100" },
     { name: "Home", image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&h=200&fit=crop", color: "bg-yellow-100" },
+    { name: "Sports", image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=300&h=200&fit=crop", color: "bg-orange-100" },
+    { name: "Beauty", image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=300&h=200&fit=crop", color: "bg-purple-100" },
+    { name: "Toys", image: "https://images.unsplash.com/photo-1558877385-5c71cf632db5?w=300&h=200&fit=crop", color: "bg-red-100" },
+    { name: "Books", image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=300&h=200&fit=crop", color: "bg-indigo-100" },
   ];
 
   const features = [
@@ -38,6 +43,10 @@ const Index = () => {
       x: e.clientX - rect.left,
       y: e.clientY - rect.top,
     });
+  };
+
+  const handleCategoryClick = (categoryName: string) => {
+    return `/products/${encodeURIComponent(categoryName.toLowerCase())}`;
   };
 
   return (
@@ -65,7 +74,7 @@ const Index = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/products">
-              <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-8 btn-ripple">
+              <Button size="lg" className="bg-[hsl(47,100%,48%)] hover:bg-[hsl(47,100%,42%)] text-accent-foreground font-semibold px-8 btn-ripple">
                 Shop Now
               </Button>
             </Link>
@@ -96,15 +105,14 @@ const Index = () => {
       </section>
 
       {/* Categories */}
-      <section className="py-16 bg-background dark-spotlight-container">
-        <div className="dark-spotlight-effect"></div>
+      <section className="py-16 bg-background">
         <div className="container mx-auto px-4 relative z-10">
           <h2 className="text-3xl font-bold text-center mb-12 text-foreground">
             Shop by Category
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {categories.map((category, index) => (
-              <Link key={index} to="/products">
+            {categoryCards.map((category, index) => (
+              <Link key={index} to={handleCategoryClick(category.name)}>
                 <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer bg-card border-border">
                   <div className="aspect-square overflow-hidden">
                     <img 
@@ -126,14 +134,7 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-primary py-16 relative overflow-hidden spotlight-container">
-        <div 
-          className="spotlight-effect"
-          style={{
-            '--mouse-x': `${mousePosition.x}px`,
-            '--mouse-y': `${mousePosition.y}px`
-          } as React.CSSProperties}
-        ></div>
+      <section className="bg-primary py-16 relative overflow-hidden">
         <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-3xl font-bold text-white mb-4">
             Ready to start shopping?
@@ -142,7 +143,7 @@ const Index = () => {
             Discover thousands of products at unbeatable prices
           </p>
           <Link to="/products">
-            <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 btn-ripple">
+            <Button size="lg" className="bg-[hsl(47,100%,48%)] hover:bg-[hsl(47,100%,42%)] text-accent-foreground px-8 btn-ripple">
               Browse All Products
             </Button>
           </Link>
@@ -151,16 +152,9 @@ const Index = () => {
 
       {/* Footer */}
       <footer 
-        className="bg-[hsl(270,20%,10%)] text-white py-12 dark-spotlight-container"
+        className="bg-[hsl(270,20%,10%)] text-white py-12"
         onMouseMove={handleFooterMouseMove}
       >
-        <div 
-          className="dark-spotlight-effect" 
-          style={{
-            '--mouse-x': `${footerMousePosition.x}px`,
-            '--mouse-y': `${footerMousePosition.y}px`
-          } as React.CSSProperties}
-        ></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>

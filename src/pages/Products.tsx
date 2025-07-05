@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Header from "@/components/Header";
@@ -29,11 +30,13 @@ const Products = () => {
   useEffect(() => {
     let filtered = [...products];
 
-    // Category filter
+    // Category filter - fix the filtering logic
     if (category && category !== "all-departments") {
-      const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
+      // Normalize category name for comparison
+      const categoryName = category.replace(/%20/g, ' ').toLowerCase();
       filtered = filtered.filter(product => 
-        product.category.toLowerCase() === categoryName.toLowerCase()
+        product.category.toLowerCase() === categoryName ||
+        product.category.toLowerCase().includes(categoryName)
       );
     }
 
@@ -78,7 +81,7 @@ const Products = () => {
     }
     
     setFilteredProducts(sortedProducts);
-  }, [sortBy]);
+  }, [sortBy, filteredProducts]);
 
   const clearFilters = () => {
     setFilters({
@@ -96,7 +99,9 @@ const Products = () => {
     if (!category || category === "all-departments") {
       return "All Products";
     }
-    return category.charAt(0).toUpperCase() + category.slice(1) + " Products";
+    // Decode URL encoding and capitalize
+    const decodedCategory = decodeURIComponent(category).replace(/\b\w/g, l => l.toUpperCase());
+    return decodedCategory + " Products";
   };
 
   return (
@@ -110,7 +115,7 @@ const Products = () => {
             {getCategoryTitle()}
           </h1>
           <p className="text-muted-foreground">
-            {category ? `Discover products in ${category}` : "Discover our most popular and highly-rated products"}
+            {category ? `Discover products in ${decodeURIComponent(category)}` : "Discover our most popular and highly-rated products"}
           </p>
         </div>
 
