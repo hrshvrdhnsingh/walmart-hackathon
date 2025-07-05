@@ -1,13 +1,15 @@
 
-import { Search, ShoppingCart, Menu } from "lucide-react";
+import { Search, ShoppingCart, Menu, Heart } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import UserDropdown from "./UserDropdown";
 import LocationSelector from "./LocationSelector";
+import { categories } from "@/data/mockProducts";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -15,6 +17,7 @@ const Header = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const { totalItems } = useCart();
+  const { items: wishlistItems } = useWishlist();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,10 +26,18 @@ const Header = () => {
     }
   };
 
+  const handleCategoryClick = (category: string) => {
+    if (category === "All Departments") {
+      navigate("/products");
+    } else {
+      navigate(`/products/${encodeURIComponent(category.toLowerCase())}`);
+    }
+  };
+
   return (
     <header className="bg-primary text-white">
       {/* Top bar */}
-      <div className="bg-[hsl(270,20%,15%)] py-2">
+      <div className="bg-primary/90 py-2">
         <div className="container mx-auto px-4 flex justify-between items-center text-sm">
           <LocationSelector />
           <div className="flex items-center space-x-4">
@@ -34,7 +45,7 @@ const Header = () => {
               <UserDropdown />
             ) : (
               <Link to="/signin">
-                <Button variant="ghost" className="text-white hover:text-accent hover:bg-[hsl(270,20%,15%) text-sm">
+                <Button variant="ghost" className="text-white hover:text-accent hover:bg-primary/80 text-sm">
                   Sign In
                 </Button>
               </Link>
@@ -79,9 +90,19 @@ const Header = () => {
 
           {/* Right side icons */}
           <div className="flex items-center space-x-4">
+            <Link to="/wishlist">
+              <Button variant="ghost" className="text-white relative bg-transparent hover:text-accent hover:bg-primary/80">
+                <Heart className="h-6 w-6" />
+                {wishlistItems.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center font-semibold">
+                    {wishlistItems.length > 99 ? '99+' : wishlistItems.length}
+                  </span>
+                )}
+              </Button>
+            </Link>
             <Link to="/cart">
-              <Button variant="cart" className="text-white relative bg-transparent">
-                <ShoppingCart className="h-10 w-10 bg-transparent hover:text-accent hover:bg-[hsl(270,20%,15%)" />
+              <Button variant="ghost" className="text-white relative bg-transparent hover:text-accent hover:bg-primary/80">
+                <ShoppingCart className="h-6 w-6" />
                 {totalItems > 0 && (
                   <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center font-semibold">
                     {totalItems > 99 ? '99+' : totalItems}
@@ -92,7 +113,7 @@ const Header = () => {
             <Button 
               variant="ghost" 
               size="icon" 
-              className="text-white hover:bg-primary/20 md:hidden"
+              className="text-white hover:bg-primary/80 md:hidden"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               <Menu className="h-6 w-6" />
@@ -122,24 +143,18 @@ const Header = () => {
       </div>
 
       {/* Navigation */}
-      <nav className="bg-[hsl(270,20%,15%)] py-2">
+      <nav className="bg-primary/90 py-2">
         <div className="container mx-auto px-4">
           <div className={`${isMobileMenuOpen ? 'block' : 'hidden'} md:flex items-center space-y-2 md:space-y-0 md:space-x-8 text-sm`}>
-            <Link to="/products" className="block hover:text-accent transition-colors py-2 md:py-0">
-              All Departments
-            </Link>
-            <Link to="/products" className="block hover:text-accent transition-colors py-2 md:py-0">
-              Grocery & Essentials
-            </Link>
-            <Link to="/products" className="block hover:text-accent transition-colors py-2 md:py-0">
-              Fashion
-            </Link>
-            <Link to="/products" className="block hover:text-accent transition-colors py-2 md:py-0">
-              Electronics
-            </Link>
-            <Link to="/products" className="block hover:text-accent transition-colors py-2 md:py-0">
-              Home
-            </Link>
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => handleCategoryClick(category)}
+                className="block hover:text-accent transition-colors py-2 md:py-0 text-left w-full md:w-auto"
+              >
+                {category}
+              </button>
+            ))}
             <Link to="/contact" className="block hover:text-accent transition-colors py-2 md:py-0">
               Contact Us
             </Link>

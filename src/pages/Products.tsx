@@ -1,141 +1,68 @@
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import Header from "@/components/Header";
 import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Filter, Grid, List, X } from "lucide-react";
-
-// Mock data - replace with actual API call
-const mockProducts = [
-  {
-    id: "1",
-    name: "Samsung 65\" 4K Smart TV with HDR and Alexa Built-in",
-    price: 499.99,
-    originalPrice: 699.99,
-    image: "https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=300&h=300&fit=crop",
-    rating: 4.5,
-    reviews: 1250,
-    isSponsored: true,
-    category: "Electronics",
-  },
-  {
-    id: "2",
-    name: "Apple AirPods Pro (2nd Generation) with MagSafe Case",
-    price: 199.99,
-    originalPrice: 249.99,
-    image: "https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?w=300&h=300&fit=crop",
-    rating: 4.8,
-    reviews: 892,
-    category: "Electronics",
-  },
-  {
-    id: "3",
-    name: "Nike Air Max 270 Running Shoes - Men's",
-    price: 89.99,
-    originalPrice: 120.00,
-    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop",
-    rating: 4.3,
-    reviews: 567,
-  },
-  {
-    id: "4",
-    name: "KitchenAid Artisan Series 5-Qt Stand Mixer",
-    price: 279.99,
-    image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300&h=300&fit=crop",
-    rating: 4.7,
-    reviews: 334,
-  },
-  {
-    id: "5",
-    name: "iPhone 15 Pro 256GB - Natural Titanium",
-    price: 1099.99,
-    image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=300&h=300&fit=crop",
-    rating: 4.9,
-    reviews: 2104,
-  },
-  {
-    id: "6",
-    name: "Dyson V15 Detect Cordless Vacuum Cleaner",
-    price: 649.99,
-    originalPrice: 749.99,
-    image: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=300&fit=crop",
-    rating: 4.6,
-    reviews: 445,
-  },
-  {
-    id: "7",
-    name: "Sony WH-1000XM5 Wireless Noise Canceling Headphones",
-    price: 329.99,
-    originalPrice: 399.99,
-    image: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300&h=300&fit=crop",
-    rating: 4.8,
-    reviews: 778,
-  },
-  {
-    id: "8",
-    name: "Instant Pot Duo 7-in-1 Electric Pressure Cooker",
-    price: 79.99,
-    originalPrice: 99.99,
-    image: "https://images.unsplash.com/photo-1574781330855-d0db2706b3d0?w=300&h=300&fit=crop",
-    rating: 4.4,
-    reviews: 1567,
-  },
-];
+import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
+import { Filter, Grid, List, X, ChevronDown, Search } from "lucide-react";
+import { mockProducts } from "@/data/mockProducts";
 
 const Products = () => {
-  const [products, setProducts] = useState(mockProducts);
+  const { category } = useParams();
+  const [products] = useState(mockProducts);
   const [filteredProducts, setFilteredProducts] = useState(mockProducts);
   const [isLoading, setIsLoading] = useState(false);
   const [sortBy, setSortBy] = useState("featured");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
+  const [showPriceFilter, setShowPriceFilter] = useState(false);
+  const [brandSearch, setBrandSearch] = useState("");
   const [filters, setFilters] = useState({
-    category: "",
-    priceRange: "",
+    priceRange: [0, 1200],
     rating: "",
+    brand: "",
   });
 
-  // Simulate API call for top products
-  useEffect(() => {
-    const fetchTopProducts = async () => {
-      setIsLoading(true);
-      // TODO: Replace with actual API call
-      setTimeout(() => {
-        setProducts(mockProducts);
-        setFilteredProducts(mockProducts);
-        setIsLoading(false);
-      }, 1000);
-    };
-
-    fetchTopProducts();
-  }, []);
-
-  // Apply filters
+  // Filter products based on category and other filters
   useEffect(() => {
     let filtered = [...products];
 
-    if (filters.category) {
-      filtered = filtered.filter(product => product.category === filters.category);
+    // Category filter
+    if (category && category !== "all-departments") {
+      const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
+      filtered = filtered.filter(product => 
+        product.category.toLowerCase() === categoryName.toLowerCase()
+      );
     }
 
-    if (filters.priceRange) {
-      const [min, max] = filters.priceRange.split('-').map(Number);
-      filtered = filtered.filter(product => product.price >= min && product.price <= max);
-    }
+    // Price range filter
+    filtered = filtered.filter(product => 
+      product.price >= filters.priceRange[0] && product.price <= filters.priceRange[1]
+    );
 
+    // Rating filter
     if (filters.rating) {
       const minRating = Number(filters.rating);
       filtered = filtered.filter(product => product.rating >= minRating);
     }
 
-    setFilteredProducts(filtered);
-  }, [filters, products]);
+    // Brand search filter (mock implementation)
+    if (filters.brand) {
+      filtered = filtered.filter(product => 
+        product.name.toLowerCase().includes(filters.brand.toLowerCase())
+      );
+    }
 
-  const handleSortChange = (newSort: string) => {
-    setSortBy(newSort);
+    setFilteredProducts(filtered);
+  }, [filters, products, category]);
+
+  // Sort products
+  useEffect(() => {
     const sortedProducts = [...filteredProducts];
     
-    switch (newSort) {
+    switch (sortBy) {
       case "price-low":
         sortedProducts.sort((a, b) => a.price - b.price);
         break;
@@ -151,17 +78,26 @@ const Products = () => {
     }
     
     setFilteredProducts(sortedProducts);
-  };
+  }, [sortBy]);
 
   const clearFilters = () => {
     setFilters({
-      category: "",
-      priceRange: "",
+      priceRange: [0, 1200],
       rating: "",
+      brand: "",
     });
+    setBrandSearch("");
   };
 
-  const hasActiveFilters = Object.values(filters).some(filter => filter !== "");
+  const hasActiveFilters = filters.rating !== "" || filters.brand !== "" || 
+    filters.priceRange[0] !== 0 || filters.priceRange[1] !== 1200;
+
+  const getCategoryTitle = () => {
+    if (!category || category === "all-departments") {
+      return "All Products";
+    }
+    return category.charAt(0).toUpperCase() + category.slice(1) + " Products";
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -171,10 +107,10 @@ const Products = () => {
         {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">
-            Top Products
+            {getCategoryTitle()}
           </h1>
           <p className="text-muted-foreground">
-            Discover our most popular and highly-rated products
+            {category ? `Discover products in ${category}` : "Discover our most popular and highly-rated products"}
           </p>
         </div>
 
@@ -198,37 +134,55 @@ const Products = () => {
               </div>
 
               <div className="space-y-6">
+                {/* Price Range Filter */}
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">Category</label>
-                  <select
-                    value={filters.category}
-                    onChange={(e) => setFilters({ ...filters, category: e.target.value })}
-                    className="w-full border border-border rounded px-3 py-2 text-sm bg-input text-foreground"
+                  <Button
+                    variant="ghost"
+                    onClick={() => setShowPriceFilter(!showPriceFilter)}
+                    className="w-full justify-between p-0 h-auto text-sm font-medium text-foreground"
                   >
-                    <option value="">All Categories</option>
-                    <option value="Electronics">Electronics</option>
-                    <option value="Fashion">Fashion</option>
-                    <option value="Home">Home</option>
-                    <option value="Grocery">Grocery</option>
-                  </select>
+                    Price Range
+                    <ChevronDown className={`h-4 w-4 transition-transform ${showPriceFilter ? 'rotate-180' : ''}`} />
+                  </Button>
+                  {showPriceFilter && (
+                    <div className="mt-3 space-y-3">
+                      <div className="px-2">
+                        <Slider
+                          value={filters.priceRange}
+                          onValueChange={(value) => setFilters({ ...filters, priceRange: value })}
+                          max={1200}
+                          min={0}
+                          step={10}
+                          className="w-full"
+                        />
+                      </div>
+                      <div className="flex justify-between text-sm text-muted-foreground">
+                        <span>${filters.priceRange[0]}</span>
+                        <span>${filters.priceRange[1]}</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
+                {/* Brand Search */}
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">Price Range</label>
-                  <select
-                    value={filters.priceRange}
-                    onChange={(e) => setFilters({ ...filters, priceRange: e.target.value })}
-                    className="w-full border border-border rounded px-3 py-2 text-sm bg-input text-foreground"
-                  >
-                    <option value="">Any Price</option>
-                    <option value="0-50">$0 - $50</option>
-                    <option value="50-100">$50 - $100</option>
-                    <option value="100-500">$100 - $500</option>
-                    <option value="500-1000">$500 - $1000</option>
-                    <option value="1000-99999">$1000+</option>
-                  </select>
+                  <label className="text-sm font-medium text-foreground mb-2 block">Brand</label>
+                  <div className="relative">
+                    <Input
+                      type="text"
+                      placeholder="Search brands..."
+                      value={brandSearch}
+                      onChange={(e) => {
+                        setBrandSearch(e.target.value);
+                        setFilters({ ...filters, brand: e.target.value });
+                      }}
+                      className="w-full pl-8"
+                    />
+                    <Search className="h-4 w-4 absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  </div>
                 </div>
 
+                {/* Customer Rating */}
                 <div>
                   <label className="text-sm font-medium text-foreground mb-2 block">Customer Rating</label>
                   <select
@@ -284,7 +238,7 @@ const Products = () => {
                   <span className="text-sm text-muted-foreground">Sort by:</span>
                   <select 
                     value={sortBy}
-                    onChange={(e) => handleSortChange(e.target.value)}
+                    onChange={(e) => setSortBy(e.target.value)}
                     className="border border-border rounded px-3 py-1 text-sm bg-input text-foreground"
                   >
                     <option value="featured">Featured</option>
@@ -298,19 +252,19 @@ const Products = () => {
               {hasActiveFilters && (
                 <div className="mt-4 pt-4 border-t border-border">
                   <div className="flex flex-wrap gap-2">
-                    {filters.category && (
+                    {(filters.priceRange[0] !== 0 || filters.priceRange[1] !== 1200) && (
                       <span className="bg-accent/20 text-accent px-2 py-1 rounded-full text-xs">
-                        Category: {filters.category}
-                      </span>
-                    )}
-                    {filters.priceRange && (
-                      <span className="bg-accent/20 text-accent px-2 py-1 rounded-full text-xs">
-                        Price: ${filters.priceRange.replace('-', ' - $')}
+                        Price: ${filters.priceRange[0]} - ${filters.priceRange[1]}
                       </span>
                     )}
                     {filters.rating && (
                       <span className="bg-accent/20 text-accent px-2 py-1 rounded-full text-xs">
                         Rating: {filters.rating}+ Stars
+                      </span>
+                    )}
+                    {filters.brand && (
+                      <span className="bg-accent/20 text-accent px-2 py-1 rounded-full text-xs">
+                        Brand: {filters.brand}
                       </span>
                     )}
                   </div>

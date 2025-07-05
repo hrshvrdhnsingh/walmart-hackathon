@@ -1,8 +1,9 @@
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Star } from "lucide-react";
+import { Star, Heart } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import { toast } from "sonner";
 
 interface Product {
@@ -14,6 +15,7 @@ interface Product {
   rating: number;
   reviews: number;
   isSponsored?: boolean;
+  category: string;
 }
 
 interface ProductCardProps {
@@ -22,6 +24,7 @@ interface ProductCardProps {
 
 const ProductCard = ({ product }: ProductCardProps) => {
   const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   
   const discount = product.originalPrice 
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
@@ -41,8 +44,45 @@ const ProductCard = ({ product }: ProductCardProps) => {
     });
   };
 
+  const handleWishlistToggle = () => {
+    if (isInWishlist(product.id)) {
+      removeFromWishlist(product.id);
+      toast.info("Removed from wishlist", {
+        description: product.name,
+        duration: 2000,
+      });
+    } else {
+      addToWishlist(product);
+      toast.success("Added to wishlist!", {
+        description: product.name,
+        duration: 2000,
+      });
+    }
+  };
+
+  const formatPrice = (price: number) => {
+    const dollars = Math.floor(price);
+    const cents = Math.round((price - dollars) * 100);
+    return { dollars, cents };
+  };
+
+  const { dollars, cents } = formatPrice(product.price);
+
   return (
-    <Card className="p-4 hover:shadow-lg transition-shadow bg-card border-border h-full flex flex-col">
+    <Card className="p-4 hover:shadow-lg transition-shadow bg-card border-border h-full flex flex-col relative">
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={handleWishlistToggle}
+        className={`absolute top-2 right-2 z-10 h-8 w-8 ${
+          isInWishlist(product.id) 
+            ? "text-red-500 hover:text-red-600" 
+            : "text-gray-400 hover:text-red-500"
+        }`}
+      >
+        <Heart className={`h-4 w-4 ${isInWishlist(product.id) ? "fill-current" : ""}`} />
+      </Button>
+
       {product.isSponsored && (
         <div className="text-xs text-muted-foreground mb-2 h-4">Sponsored</div>
       )}
@@ -80,9 +120,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </div>
 
         <div className="flex items-center space-x-2 flex-shrink-0">
-          <span className="text-lg font-semibold text-foreground">
-            ${product.price.toFixed(2)}
-          </span>
+          <div className="walmart-price text-lg font-semibold text-foreground">
+            <span className="dollar">$</span>
+            <span>{dollars}</span>
+            <span className="cents">{cents.toString().padStart(2, '0')}</span>
+          </div>
           {product.originalPrice && (
             <>
               <span className="text-sm text-muted-foreground line-through">

@@ -10,23 +10,23 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 270 15% 8%; /* Dark purple-black */
-    --foreground: 0 0% 95%;
+    --background: 0 0% 100%; /* White background */
+    --foreground: 0 0% 0%;
 
-    --card: 270 10% 12%;
-    --card-foreground: 0 0% 95%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
 
-    --popover: 270 10% 12%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
 
-    --primary: 260 60% 25%; /* Deep purple */
+    --primary: 211 100% 50%; /* Walmart Blue #0071ce */
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 270 5% 18%;
-    --secondary-foreground: 0 0% 95%;
+    --secondary: 210 17% 95%;
+    --secondary-foreground: 0 0% 9%;
 
-    --muted: 270 5% 18%;
-    --muted-foreground: 220 5% 60%;
+    --muted: 210 17% 95%;
+    --muted-foreground: 215 13% 65%;
 
     --accent: 47 100% 57%; /* Walmart Yellow #ffc220 */
     --accent-foreground: 240 5.9% 10%;
@@ -34,20 +34,20 @@ All colors MUST be HSL.
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 270 5% 20%;
-    --input: 270 5% 18%;
-    --ring: 260 60% 25%;
+    --border: 214 13% 91%;
+    --input: 214 13% 91%;
+    --ring: 211 100% 50%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 270 10% 10%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 260 60% 25%;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.9% 10%;
+    --sidebar-primary: 211 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 270 5% 18%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 270 5% 20%;
-    --sidebar-ring: 260 60% 25%;
+    --sidebar-accent: 210 17% 95%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 214 13% 91%;
+    --sidebar-ring: 211 100% 50%;
   }
 }
 
@@ -69,7 +69,7 @@ All colors MUST be HSL.
   overflow: hidden;
 }
 
-/* Enhanced Spotlight effect for purple backgrounds */
+/* Enhanced Spotlight effect for blue backgrounds */
 .spotlight-container {
   position: relative;
   overflow: hidden;
@@ -95,13 +95,13 @@ All colors MUST be HSL.
   opacity: 1;
 }
 
-/* Subtle spotlight for dark backgrounds */
-.dark-spotlight-container {
+/* Subtle spotlight for light backgrounds */
+.light-spotlight-container {
   position: relative;
   overflow: hidden;
 }
 
-.dark-spotlight-effect {
+.light-spotlight-effect {
   position: absolute;
   top: 0;
   left: 0;
@@ -109,7 +109,7 @@ All colors MUST be HSL.
   bottom: 0;
   background: radial-gradient(
     400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(255, 194, 32, 0.03),
+    rgba(0, 113, 206, 0.03),
     transparent 30%
   );
   pointer-events: none;
@@ -117,7 +117,7 @@ All colors MUST be HSL.
   transition: opacity 0.3s ease;
 }
 
-.dark-spotlight-container:hover .dark-spotlight-effect {
+.light-spotlight-container:hover .light-spotlight-effect {
   opacity: 1;
 }
 
@@ -147,12 +147,12 @@ All colors MUST be HSL.
 
 /* Toast theming */
 .toaster {
-  --normal-bg: hsl(270, 10%, 12%);
-  --normal-border: hsl(270, 5%, 20%);
-  --normal-text: hsl(0, 0%, 95%);
+  --normal-bg: hsl(0, 0%, 100%);
+  --normal-border: hsl(214, 13%, 91%);
+  --normal-text: hsl(0, 0%, 0%);
   --success-bg: hsl(142, 76%, 36%);
   --success-text: hsl(0, 0%, 100%);
-  --info-bg: hsl(260, 60%, 25%);
+  --info-bg: hsl(211, 100%, 50%);
   --info-text: hsl(0, 0%, 100%);
   --warning-bg: hsl(47, 100%, 57%);
   --warning-text: hsl(240, 5.9%, 10%);
@@ -189,4 +189,15 @@ All colors MUST be HSL.
   background: var(--error-bg) !important;
   color: var(--error-text) !important;
   border-color: transparent !important;
+}
+
+/* Walmart price styling */
+.walmart-price .dollar {
+  font-size: 0.8em;
+  vertical-align: super;
+}
+
+.walmart-price .cents {
+  font-size: 0.8em;
+  vertical-align: super;
 }
