@@ -80,8 +80,8 @@ const Header = () => {
           {/* Right side icons */}
           <div className="flex items-center space-x-4">
             <Link to="/cart">
-              <Button variant="cart" size="icon" className="text-white relative bg-transparent">
-                <ShoppingCart className="h-6 w-6 bg-transparent hover:text-accent hover:bg-[hsl(270,20%,15%)" />
+              <Button variant="cart" className="text-white relative bg-transparent">
+                <ShoppingCart className="h-10 w-10 bg-transparent hover:text-accent hover:bg-[hsl(270,20%,15%)" />
                 {totalItems > 0 && (
                   <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs rounded-full h-4 w-4 flex items-center justify-center font-semibold">
                     {totalItems > 99 ? '99+' : totalItems}
