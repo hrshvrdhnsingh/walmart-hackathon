@@ -11,12 +11,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 const UserDropdown = () => {
   const { user, logout } = useAuth();
 
   const handleSignOut = () => {
     logout();
+    toast.info("You have been signed out", {
+      description: "Thanks for shopping with us!",
+      duration: 3000,
+    });
   };
 
   if (!user) return null;

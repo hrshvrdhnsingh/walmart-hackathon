@@ -1,30 +1,63 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import Header from "@/components/Header";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Minus, Plus, Trash2, ShoppingCart } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { useCart } from "@/contexts/CartContext";
+import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 const Cart = () => {
   const { items, totalAmount, updateQuantity, removeFromCart, clearCart } = useCart();
+  const [promoCode, setPromoCode] = useState("");
+
+  const handleQuantityChange = (id: string, newQuantity: number) => {
+    if (newQuantity < 1) return;
+    updateQuantity(id, newQuantity);
+    toast.info("Cart updated", {
+      description: `Quantity changed to ${newQuantity}`,
+      duration: 1500,
+    });
+  };
+
+  const handleRemoveItem = (id: string, name: string) => {
+    removeFromCart(id);
+    toast.error("Item removed from cart", {
+      description: name,
+      duration: 2000,
+    });
+  };
+
+  const handleCheckout = () => {
+    toast.success("Proceeding to checkout...", {
+      description: `Total: $${totalAmount.toFixed(2)}`,
+      duration: 3000,
+    });
+  };
+
+  const tax = totalAmount * 0.08;
+  const shipping = totalAmount > 35 ? 0 : 5.99;
+  const finalTotal = totalAmount + tax + shipping;
 
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
         <div className="container mx-auto px-4 py-8">
-          <div className="text-center py-12">
-            <ShoppingCart className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-            <h2 className="text-2xl font-semibold text-foreground mb-2">Your cart is empty</h2>
-            <p className="text-muted-foreground mb-6">Add some products to get started</p>
-            <Link to="/products">
-              <Button className="bg-primary hover:bg-primary/90">
-                Continue Shopping
-              </Button>
-            </Link>
-          </div>
+          <Card className="bg-card border-border">
+            <CardContent className="text-center py-12">
+              <ShoppingBag className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <h2 className="text-2xl font-semibold text-foreground mb-2">Your cart is empty</h2>
+              <p className="text-muted-foreground mb-6">Add some items to get started!</p>
+              <Link to="/products">
+                <Button className="bg-primary hover:bg-primary/90 btn-ripple">
+                  Continue Shopping
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );
@@ -33,113 +66,122 @@ const Cart = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      
       <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Shopping Cart</h1>
-          <p className="text-muted-foreground">{items.length} item{items.length !== 1 ? 's' : ''} in your cart</p>
-        </div>
-
+        <h1 className="text-3xl font-bold text-foreground mb-8">Shopping Cart</h1>
+        
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-4">
             {items.map((item) => (
-              <Card key={item.id} className="p-4 bg-card border-border">
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <div className="w-24 h-24 flex-shrink-0">
+              <Card key={item.id} className="bg-card border-border">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-4">
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="w-full h-full object-cover rounded-lg"
+                      className="w-20 h-20 object-cover rounded-lg bg-muted"
                     />
-                  </div>
-                  
-                  <div className="flex-1">
-                    <h3 className="font-medium text-foreground mb-2 line-clamp-2">
-                      {item.name}
-                    </h3>
-                    <p className="text-lg font-semibold text-foreground mb-4">
-                      ${item.price.toFixed(2)}
-                    </p>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="h-8 w-8 border-border"
-                        >
-                          <Minus className="h-4 w-4" />
-                        </Button>
-                        <span className="w-8 text-center text-foreground">{item.quantity}</span>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="h-8 w-8 border-border"
-                        >
-                          <Plus className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-foreground mb-2">{item.name}</h3>
+                      <p className="text-lg font-bold text-foreground">${item.price.toFixed(2)}</p>
+                    </div>
+                    <div className="flex items-center space-x-2">
                       <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeFromCart(item.id)}
-                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                        className="h-8 w-8 btn-ripple"
                       >
-                        <Trash2 className="h-4 w-4 mr-1" />
-                        Remove
+                        <Minus className="h-4 w-4" />
+                      </Button>
+                      <span className="w-12 text-center text-foreground">{item.quantity}</span>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                        className="h-8 w-8 btn-ripple"
+                      >
+                        <Plus className="h-4 w-4" />
                       </Button>
                     </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleRemoveItem(item.id, item.name)}
+                      className="text-destructive hover:bg-destructive/10 btn-ripple"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                   </div>
-                </div>
+                </CardContent>
               </Card>
             ))}
           </div>
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <Card className="p-6 bg-card border-border sticky top-4">
-              <h2 className="text-xl font-semibold text-foreground mb-4">Order Summary</h2>
-              
-              <div className="space-y-2 mb-4">
-                <div className="flex justify-between text-foreground">
-                  <span>Subtotal</span>
-                  <span>${totalAmount.toFixed(2)}</span>
+            <Card className="bg-card border-border sticky top-4">
+              <CardHeader>
+                <CardTitle className="text-foreground">Order Summary</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <div className="flex justify-between text-foreground">
+                    <span>Subtotal ({items.reduce((sum, item) => sum + item.quantity, 0)} items)</span>
+                    <span>${totalAmount.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between text-foreground">
+                    <span>Shipping</span>
+                    <span>{shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}</span>
+                  </div>
+                  <div className="flex justify-between text-foreground">
+                    <span>Estimated tax</span>
+                    <span>${tax.toFixed(2)}</span>
+                  </div>
+                  <div className="border-t border-border pt-2">
+                    <div className="flex justify-between font-semibold text-lg text-foreground">
+                      <span>Total</span>
+                      <span>${finalTotal.toFixed(2)}</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex justify-between text-foreground">
-                  <span>Shipping</span>
-                  <span>Free</span>
-                </div>
-                <div className="flex justify-between text-foreground">
-                  <span>Tax</span>
-                  <span>${(totalAmount * 0.08).toFixed(2)}</span>
-                </div>
-                <hr className="border-border" />
-                <div className="flex justify-between text-lg font-semibold text-foreground">
-                  <span>Total</span>
-                  <span>${(totalAmount * 1.08).toFixed(2)}</span>
-                </div>
-              </div>
 
-              <Button className="w-full bg-primary hover:bg-primary/90 mb-3">
-                Proceed to Checkout
-              </Button>
-              
-              <Button
-                variant="outline"
-                className="w-full border-border text-foreground hover:bg-accent"
-                onClick={clearCart}
-              >
-                Clear Cart
-              </Button>
-              
-              <Link to="/products" className="block mt-3">
-                <Button variant="ghost" className="w-full text-accent hover:bg-accent/10">
-                  Continue Shopping
+                {shipping > 0 && (
+                  <div className="bg-accent/10 p-3 rounded-lg">
+                    <p className="text-sm text-foreground">
+                      Add ${(35 - totalAmount).toFixed(2)} more for FREE shipping!
+                    </p>
+                  </div>
+                )}
+
+                <div className="space-y-2">
+                  <Input
+                    placeholder="Enter promo code"
+                    value={promoCode}
+                    onChange={(e) => setPromoCode(e.target.value)}
+                    className="bg-input border-border text-foreground"
+                  />
+                  <Button variant="outline" className="w-full border-border text-foreground btn-ripple">
+                    Apply Code
+                  </Button>
+                </div>
+
+                <Button 
+                  onClick={handleCheckout}
+                  className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold py-3 btn-ripple"
+                >
+                  Proceed to Checkout
                 </Button>
-              </Link>
+
+                <div className="text-center">
+                  <Link to="/products">
+                    <Button variant="ghost" className="text-accent hover:text-accent/80 btn-ripple">
+                      Continue Shopping
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
             </Card>
           </div>
         </div>
