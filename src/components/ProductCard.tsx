@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import { toast } from "sonner";
 
 interface Product {
   id: string;
@@ -32,6 +33,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
       name: product.name,
       price: product.price,
       image: product.image,
+    });
+    
+    toast.success(`${product.name} added to cart!`, {
+      description: `$${product.price.toFixed(2)}`,
+      duration: 2000,
     });
   };
 
@@ -92,7 +98,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <div className="mt-auto pt-2">
           <Button 
             onClick={handleAddToCart}
-            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground btn-ripple"
           >
             Add to cart
           </Button>

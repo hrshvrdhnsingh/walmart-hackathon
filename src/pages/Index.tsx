@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 
 const Index = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [footerMousePosition, setFooterMousePosition] = useState({ x: 0, y: 0 });
 
   const categories = [
     { name: "Grocery", image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=300&h=200&fit=crop", color: "bg-green-100" },
@@ -26,6 +27,14 @@ const Index = () => {
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     setMousePosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
+
+  const handleFooterMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setFooterMousePosition({
       x: e.clientX - rect.left,
       y: e.clientY - rect.top,
     });
@@ -56,12 +65,12 @@ const Index = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/products">
-              <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-8">
+              <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-8 btn-ripple">
                 Shop Now
               </Button>
             </Link>
             <Link to="/search">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary px-8">
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-primary px-8 btn-ripple">
                 Search Products
               </Button>
             </Link>
@@ -87,8 +96,9 @@ const Index = () => {
       </section>
 
       {/* Categories */}
-      <section className="py-16 bg-background">
-        <div className="container mx-auto px-4">
+      <section className="py-16 bg-background dark-spotlight-container">
+        <div className="dark-spotlight-effect"></div>
+        <div className="container mx-auto px-4 relative z-10">
           <h2 className="text-3xl font-bold text-center mb-12 text-foreground">
             Shop by Category
           </h2>
@@ -116,7 +126,14 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-primary py-16 relative overflow-hidden">
+      <section className="bg-primary py-16 relative overflow-hidden spotlight-container">
+        <div 
+          className="spotlight-effect"
+          style={{
+            '--mouse-x': `${mousePosition.x}px`,
+            '--mouse-y': `${mousePosition.y}px`
+          } as React.CSSProperties}
+        ></div>
         <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-3xl font-bold text-white mb-4">
             Ready to start shopping?
@@ -125,7 +142,7 @@ const Index = () => {
             Discover thousands of products at unbeatable prices
           </p>
           <Link to="/products">
-            <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground px-8">
+            <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 btn-ripple">
               Browse All Products
             </Button>
           </Link>
@@ -133,8 +150,18 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-[hsl(270,20%,10%)] text-white py-12">
-        <div className="container mx-auto px-4">
+      <footer 
+        className="bg-[hsl(270,20%,10%)] text-white py-12 dark-spotlight-container"
+        onMouseMove={handleFooterMouseMove}
+      >
+        <div 
+          className="dark-spotlight-effect" 
+          style={{
+            '--mouse-x': `${footerMousePosition.x}px`,
+            '--mouse-y': `${footerMousePosition.y}px`
+          } as React.CSSProperties}
+        ></div>
+        <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <h3 className="font-semibold mb-4">Customer Service</h3>

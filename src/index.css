@@ -69,7 +69,7 @@ All colors MUST be HSL.
   overflow: hidden;
 }
 
-/* Spotlight effect */
+/* Enhanced Spotlight effect for purple backgrounds */
 .spotlight-container {
   position: relative;
   overflow: hidden;
@@ -83,7 +83,7 @@ All colors MUST be HSL.
   bottom: 0;
   background: radial-gradient(
     600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(255, 194, 32, 0.06),
+    rgba(255, 194, 32, 0.08),
     transparent 40%
   );
   pointer-events: none;
@@ -93,4 +93,100 @@ All colors MUST be HSL.
 
 .spotlight-container:hover .spotlight-effect {
   opacity: 1;
+}
+
+/* Subtle spotlight for dark backgrounds */
+.dark-spotlight-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.dark-spotlight-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(255, 194, 32, 0.03),
+    transparent 30%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.dark-spotlight-container:hover .dark-spotlight-effect {
+  opacity: 1;
+}
+
+/* Button ripple effect */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ripple::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.btn-ripple:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Toast theming */
+.toaster {
+  --normal-bg: hsl(270, 10%, 12%);
+  --normal-border: hsl(270, 5%, 20%);
+  --normal-text: hsl(0, 0%, 95%);
+  --success-bg: hsl(142, 76%, 36%);
+  --success-text: hsl(0, 0%, 100%);
+  --info-bg: hsl(260, 60%, 25%);
+  --info-text: hsl(0, 0%, 100%);
+  --warning-bg: hsl(47, 100%, 57%);
+  --warning-text: hsl(240, 5.9%, 10%);
+  --error-bg: hsl(0, 84.2%, 60.2%);
+  --error-text: hsl(0, 0%, 98%);
+}
+
+/* Custom toast styles */
+[data-sonner-toast] {
+  background: var(--normal-bg) !important;
+  border: 1px solid var(--normal-border) !important;
+  color: var(--normal-text) !important;
+}
+
+[data-sonner-toast][data-type="success"] {
+  background: var(--success-bg) !important;
+  color: var(--success-text) !important;
+  border-color: transparent !important;
+}
+
+[data-sonner-toast][data-type="info"] {
+  background: var(--info-bg) !important;
+  color: var(--info-text) !important;
+  border-color: transparent !important;
+}
+
+[data-sonner-toast][data-type="warning"] {
+  background: var(--warning-bg) !important;
+  color: var(--warning-text) !important;
+  border-color: transparent !important;
+}
+
+[data-sonner-toast][data-type="error"] {
+  background: var(--error-bg) !important;
+  color: var(--error-text) !important;
+  border-color: transparent !important;
 }

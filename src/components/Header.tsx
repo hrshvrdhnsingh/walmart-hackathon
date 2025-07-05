@@ -1,20 +1,21 @@
 
-import { Search, ShoppingCart, Menu } from "lucide-react";
+import { useState } from "react";
+import { Search, ShoppingCart, MapPin, Menu, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import LocationSelector from "./LocationSelector";
+import UserDropdown from "./UserDropdown";
 import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/contexts/CartContext";
-import UserDropdown from "./UserDropdown";
-import LocationSelector from "./LocationSelector";
+import { toast } from "sonner";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const { user } = useAuth();
   const { totalItems } = useCart();
+  const navigate = useNavigate();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,129 +24,97 @@ const Header = () => {
     }
   };
 
-  return (
-    <header className="bg-primary text-white">
-      {/* Top bar */}
-      <div className="bg-[hsl(270,20%,15%)] py-2">
-        <div className="container mx-auto px-4 flex justify-between items-center text-sm">
-          <LocationSelector />
-          <div className="flex items-center space-x-4">
-            {isAuthenticated ? (
-              <UserDropdown />
-            ) : (
-              <Link to="/signin">
-                <Button variant="ghost" className="text-white hover:bg-primary/20 text-sm">
-                  Sign In
-                </Button>
-              </Link>
-            )}
-          </div>
-        </div>
-      </div>
+  const handleSignInClick = () => {
+    navigate('/signin');
+  };
 
-      {/* Main header */}
-      <div className="container mx-auto px-4 py-3">
+  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
+
+  return (
+    <header 
+      className="bg-primary text-white shadow-lg dark-spotlight-container"
+      onMouseMove={handleMouseMove}
+    >
+      <div 
+        className="dark-spotlight-effect" 
+        style={{
+          '--mouse-x': `${mousePosition.x}px`,
+          '--mouse-y': `${mousePosition.y}px`
+        } as React.CSSProperties}
+      ></div>
+      
+      <div className="container mx-auto px-4 py-3 relative z-10">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <div className="bg-accent p-2 rounded-lg shadow-lg flex items-center justify-center">
-              <img 
-                src="https://i5.walmartimages.com/dfw/63fd9f59-14e2/9d304ce6-96de-4331-b8ec-c5191226d378/v1/spark-icon.svg"
-                alt="Walmart"
-                className="h-8 w-8"
-              />
-            </div>
+          <Link to="/" className="flex items-center space-x-2">
+            <img 
+              src="https://i5.walmartimages.com/dfw/63fd9f59-14e2/9d304ce6-96de-4331-b8ec-c5191226d378/v1/spark-icon.svg" 
+              alt="Walmart" 
+              className="h-8 w-8"
+            />
+            <span className="font-bold text-xl hidden sm:inline">Walmart</span>
           </Link>
 
-          {/* Search bar */}
-          <form onSubmit={handleSearch} className="flex-1 mx-8 max-w-2xl hidden md:block">
+          {/* Location */}
+          <div className="hidden lg:flex">
+            <LocationSelector />
+          </div>
+
+          {/* Search */}
+          <form onSubmit={handleSearch} className="flex-1 max-w-2xl mx-4">
             <div className="relative">
               <Input
                 type="text"
                 placeholder="Search everything at Walmart online and in store"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-4 pr-12 py-3 text-foreground bg-background rounded-full border-2 border-accent focus:border-accent focus:ring-accent"
+                className="w-full pl-4 pr-12 py-2 rounded-full bg-white text-black border-0 focus:ring-2 focus:ring-accent"
               />
               <Button
                 type="submit"
-                size="icon"
-                className="absolute right-1 top-1/2 -translate-y-1/2 bg-accent hover:bg-accent/90 text-accent-foreground rounded-full h-10 w-10"
+                size="sm"
+                className="absolute right-1 top-1/2 transform -translate-y-1/2 rounded-full bg-accent hover:bg-accent/90 text-accent-foreground btn-ripple"
               >
-                <Search className="h-5 w-5" />
+                <Search className="h-4 w-4" />
               </Button>
             </div>
           </form>
 
-          {/* Right side icons */}
+          {/* Right side actions */}
           <div className="flex items-center space-x-4">
+            {user ? (
+              <UserDropdown />
+            ) : (
+              <Button
+                variant="ghost"
+                onClick={handleSignInClick}
+                className="text-white hover:bg-primary/20 btn-ripple"
+              >
+                <User className="h-5 w-5 mr-2" />
+                <span className="hidden md:inline">Sign In</span>
+              </Button>
+            )}
+
             <Link to="/cart">
-              <Button variant="ghost" size="icon" className="text-white hover:bg-primary/20 relative">
-                <ShoppingCart className="h-6 w-6" />
+              <Button variant="ghost" className="text-white hover:bg-primary/20 relative btn-ripple">
+                <ShoppingCart className="h-5 w-5" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
-                    {totalItems > 99 ? '99+' : totalItems}
+                  <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground rounded-full text-xs w-5 h-5 flex items-center justify-center font-semibold">
+                    {totalItems}
                   </span>
                 )}
+                <span className="hidden md:inline ml-2">Cart</span>
               </Button>
             </Link>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              className="text-white hover:bg-primary/20 md:hidden"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              <Menu className="h-6 w-6" />
-            </Button>
           </div>
         </div>
-
-        {/* Mobile search */}
-        <form onSubmit={handleSearch} className="mt-4 md:hidden">
-          <div className="relative">
-            <Input
-              type="text"
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-4 pr-12 py-3 text-foreground bg-background rounded-full border-2 border-accent"
-            />
-            <Button
-              type="submit"
-              size="icon"
-              className="absolute right-1 top-1/2 -translate-y-1/2 bg-accent hover:bg-accent/90 text-accent-foreground rounded-full h-10 w-10"
-            >
-              <Search className="h-5 w-5" />
-            </Button>
-          </div>
-        </form>
       </div>
-
-      {/* Navigation */}
-      <nav className="bg-[hsl(270,20%,15%)] py-2">
-        <div className="container mx-auto px-4">
-          <div className={`${isMobileMenuOpen ? 'block' : 'hidden'} md:flex items-center space-y-2 md:space-y-0 md:space-x-8 text-sm`}>
-            <Link to="/products" className="block hover:text-accent transition-colors py-2 md:py-0">
-              All Departments
-            </Link>
-            <Link to="/products" className="block hover:text-accent transition-colors py-2 md:py-0">
-              Grocery & Essentials
-            </Link>
-            <Link to="/products" className="block hover:text-accent transition-colors py-2 md:py-0">
-              Fashion
-            </Link>
-            <Link to="/products" className="block hover:text-accent transition-colors py-2 md:py-0">
-              Electronics
-            </Link>
-            <Link to="/products" className="block hover:text-accent transition-colors py-2 md:py-0">
-              Home
-            </Link>
-            <Link to="/contact" className="block hover:text-accent transition-colors py-2 md:py-0">
-              Contact Us
-            </Link>
-          </div>
-        </div>
-      </nav>
     </header>
   );
 };

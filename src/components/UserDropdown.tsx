@@ -11,12 +11,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 const UserDropdown = () => {
   const { user, logout } = useAuth();
 
   const handleSignOut = () => {
     logout();
+    toast.info("You have been signed out", {
+      description: "Thanks for shopping with us!",
+      duration: 3000,
+    });
   };
 
   if (!user) return null;
@@ -24,7 +29,7 @@ const UserDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="text-white hover:bg-primary/20 flex items-center gap-2">
+        <Button variant="ghost" className="text-white hover:bg-primary/20 flex items-center gap-2 btn-ripple">
           <User className="h-5 w-5" />
           <span className="hidden md:inline">Account</span>
           <ChevronDown className="h-4 w-4" />
